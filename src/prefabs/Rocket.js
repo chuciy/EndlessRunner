@@ -11,29 +11,49 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
         this.setBounce(0.5);
 
         this.count = 0;
+
+        //state
+        
+        this.STATES = {
+            DEFAULT: 1,
+            DASH: 2
+        };
+        this.state = this.STATES.DEFAULT;
     }
     update() {
-        this.count++;
         const BASE_SPEED = 200;
-
-        this.setVelocityX(this.body.velocity.x * 0.99);
-        this.setVelocityY(this.body.velocity.y * 0.99);
-
-        if(pointer.isDown){
-            let dirX =  this.scene.input.mousePointer.x - this.x;
-            let dirY =  this.scene.input.mousePointer.y - this.y;
-            let sqrtXY = Math.sqrt(dirX * dirX + dirY * dirY);
-            this.setVelocityX(dirX / sqrtXY * BASE_SPEED * this.moveSpeed);
-            this.setVelocityY(dirY / sqrtXY * BASE_SPEED * this.moveSpeed);
+        if(this.state == this.STATES.DEFAULT){
+            this.setVelocityX(this.body.velocity.x * 0.99);
+            this.setVelocityY(this.body.velocity.y * 0.99);
+    
+            let dirX =  pointer.x - this.x;
+            let dirY =  pointer.y - this.y;
+            if(pointer.isDown && Math.abs(dirX) >= 20 && Math.abs(dirY) >= 20){
+                
+                let sqrtXY = Math.sqrt(dirX * dirX + dirY * dirY);
+                this.setVelocityX(dirX / sqrtXY * BASE_SPEED * this.moveSpeed);
+                this.setVelocityY(dirY / sqrtXY * BASE_SPEED * this.moveSpeed);
+                
+            }
         }
-        
     }
 
     skill(){
-
-       this.x += 200 * (this.body.velocity.x) / Math.abs(this.body.velocity.x)
-       this.y += 200 * (this.body.velocity.y) / Math.abs(this.body.velocity.y)
+        if(this.state == this.STATES.DEFAULT){
+            let dir = (pointer.position.subtract(this.getCenter())).normalize();
+            let tween = this.scene.tweens.add({
+                targets: this,
+                x: this.x + dir.x * 300,
+                y: this.y + dir.y * 300,
+                ease: 'Power1',
+                duration: 400,
+                onStart: function (tween, targets) {targets[0].state = targets[0].STATES.DASH;},
+                onComplete: function (tween, targets) {targets[0].state = targets[0].STATES.DEFAULT;},
+            });
+        }
+        
     }
+    
 }
 
 class Bullets extends Phaser.Physics.Arcade.Group

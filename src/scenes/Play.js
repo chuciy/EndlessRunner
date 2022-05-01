@@ -14,14 +14,17 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-
-        this.testval = 0;
+        
         
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 1080, 720, 'starfield').setOrigin(0, 0);
         // green UI background
 
         player = new Rocket(this, 0, 0, 'self').setOrigin(0.5, 0.5);
+
+        let tst = new Phaser.Math.Vector2(10, 29);
+        console.log(tst.normalize());
+
         this.bullets = this.bullets = new Bullets(this);
         /*
         this.input.on('pointerdown', (pointer) => {
@@ -100,15 +103,17 @@ class Play extends Phaser.Scene {
     }
 
     generateEnemy(){
-        this.timePassed += 1;
-        let t = this.timePassed;
-        this.level = -1/1200 * t * t + 0.1 * t;
-        this.debugging_text2.setText("speed: " + String(this.level));
-        
-        if(!in_bossfight){
-            if( this.timePassed % 2 == 0){
-                this.addEnemy(this.level);
-            }
+        if(!this.gameOver){
+            this.timePassed += 1;
+            let t = this.timePassed;
+            this.level = -1/1200 * t * t + 0.1 * t;
+            this.debugging_text2.setText("speed: " + String(this.level));
+            
+            if(!in_bossfight){
+                if( this.timePassed % 2 == 0){
+                    this.addEnemy(this.level);
+                }
+            }            
         }
     }
 
@@ -182,6 +187,6 @@ class Play extends Phaser.Scene {
         keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-        pointer = this.input.activePointer;
+        pointer = this.input.mousePointer;
     }
 }
