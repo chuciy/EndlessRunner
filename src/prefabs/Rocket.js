@@ -5,20 +5,39 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);   
         this.moveSpeed = 2;         
         this.setImmovable();
+
+
+        this.setCollideWorldBounds(true);
+        this.setBounce(0.5);
+
+        this.count = 0;
     }
     update() {
         // WASD movement -> 8 direction
-        if(keyW.isDown && this.y >= this.height) {
-            this.y -= this.moveSpeed;
-        } else if (keyS.isDown && this.y <= game.config.height - this.height) {
-            this.y += this.moveSpeed;
+        this.count++;
+        if(this.count % 60 == 0){
+            console.log(1);
+        }
+        
+        this.setVelocity(this.body.velocity.x * 0.99, this.body.velocity.y * 0.99);
+        const base_v = 100;
+        if(keyW.isDown) {
+            this.setVelocityY(-base_v * this.moveSpeed);
+        } else if (keyS.isDown) {
+            this.setVelocityY(base_v * this.moveSpeed);
         }
 
-        if (keyA.isDown && this.x >= this.width) {
-            this.x -= this.moveSpeed;
-        } else if (keyD.isDown && this.x <= game.config.width - this.width) {
-            this.x += this.moveSpeed;
+        if (keyA.isDown) {
+            this.setVelocityX(-base_v * this.moveSpeed);
+        } else if (keyD.isDown) {
+            this.setVelocityX(base_v * this.moveSpeed);
         }
+    }
+
+    skill(){
+
+       this.x += 200 * (this.body.velocity.x) / Math.abs(this.body.velocity.x)
+       this.y += 200 * (this.body.velocity.y) / Math.abs(this.body.velocity.y)
     }
 }
 

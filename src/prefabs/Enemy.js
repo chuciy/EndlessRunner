@@ -43,5 +43,7 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
             this.setAccelerationX((Math.random() - 0.5) * 500);
             this.setAccelerationY((Math.random() - 0.5) * 500);
         }
+
+        this.setRotation(Math.atan((this.y - player.y) / (this.x - player.x))); //rotate towards player
     }
 }

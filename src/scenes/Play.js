@@ -14,14 +14,20 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        this.physics.world.setFPS(144);
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
         // green UI background
 
-        this.p1Rocket = new Rocket(this, 0, 0, 'self').setOrigin(0.5, 0.5);
+        player = new Rocket(this, 0, 0, 'self').setOrigin(0.5, 0.5);
         this.bullets = this.bullets = new Bullets(this);
         this.input.on('pointerdown', (pointer) => {
-            this.bullets.fireBullet(this.p1Rocket.x, this.p1Rocket.y);
+            this.bullets.fireBullet(player.x, player.y);
+        });
+
+        this.input.keyboard.on('keydown-P', () => {
+            this.physics.world.drawDebug = !this.physics.world.drawDebug;
+            this.physics.world.debugGraphic.clear();
         });
 
         this.input.keyboard.on('keydown-P', () => {
@@ -136,12 +142,12 @@ class Play extends Phaser.Scene {
 
         if(!this.gameOver) {
             
-            this.physics.world.collide(this.p1Rocket, this.enemy_group, this.enemyCollision, null, this);
+            this.physics.world.collide(player, this.enemy_group, this.enemyCollision, null, this);
             this.physics.world.collide(this.bullets, this.enemy_group, this.bullet_hit_enemy, null, this);
             //timer
             this.timer_text.setText('Time remaining: ' + this.clock.getRemainingSeconds().toString().substr(0, 4));
             // ----------------------
-            this.p1Rocket.update();    
+            player.update();    
         }
 
 
