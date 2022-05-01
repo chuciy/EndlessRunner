@@ -1,7 +1,7 @@
 let config = {
     type: Phaser.CANVAS,
-    width: 640,
-    height: 480,
+    width: 1080,
+    height: 720,
     scene: [ Menu, Play ],
     physics: {
         default: "arcade",
@@ -20,7 +20,7 @@ let borderPadding = 0;
 let highscore = 0;
 
 // reserve keyboard variables
-let keyF, keyR, keyLEFT, keyRIGHT;
+let keyF, keyR, keyLEFT, keyRIGHT, pointer;
 let keyW, keyQ, keyE, keyA, keyS, keyD, keyP;
 
 

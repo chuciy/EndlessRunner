@@ -13,25 +13,20 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
         this.count = 0;
     }
     update() {
-        // WASD movement -> 8 direction
         this.count++;
-        if(this.count % 60 == 0){
-            console.log(1);
+        const BASE_SPEED = 200;
+
+        this.setVelocityX(this.body.velocity.x * 0.99);
+        this.setVelocityY(this.body.velocity.y * 0.99);
+
+        if(pointer.isDown){
+            let dirX =  this.scene.input.mousePointer.x - this.x;
+            let dirY =  this.scene.input.mousePointer.y - this.y;
+            let sqrtXY = Math.sqrt(dirX * dirX + dirY * dirY);
+            this.setVelocityX(dirX / sqrtXY * BASE_SPEED * this.moveSpeed);
+            this.setVelocityY(dirY / sqrtXY * BASE_SPEED * this.moveSpeed);
         }
         
-        this.setVelocity(this.body.velocity.x * 0.99, this.body.velocity.y * 0.99);
-        const base_v = 100;
-        if(keyW.isDown) {
-            this.setVelocityY(-base_v * this.moveSpeed);
-        } else if (keyS.isDown) {
-            this.setVelocityY(base_v * this.moveSpeed);
-        }
-
-        if (keyA.isDown) {
-            this.setVelocityX(-base_v * this.moveSpeed);
-        } else if (keyD.isDown) {
-            this.setVelocityX(base_v * this.moveSpeed);
-        }
     }
 
     skill(){

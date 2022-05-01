@@ -14,9 +14,9 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        this.physics.world.setFPS(144);
+        
         // place tile sprite
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+        this.starfield = this.add.tileSprite(0, 0, 1080, 720, 'starfield').setOrigin(0, 0);
         // green UI background
 
         player = new Rocket(this, 0, 0, 'self').setOrigin(0.5, 0.5);
@@ -30,14 +30,10 @@ class Play extends Phaser.Scene {
             this.physics.world.debugGraphic.clear();
         });
 
-        this.input.keyboard.on('keydown-P', () => {
-            this.physics.world.drawDebug = !this.physics.world.drawDebug;
-            this.physics.world.debugGraphic.clear();
+        this.input.keyboard.on('keydown-SPACE', () => {
+            player.skill();
         });
 
-        // # particle
-        this.particles = this.add.particles('particle');
-        this.emitter = this.particles.createEmitter();
 
         this.enemy_group = this.add.group({runChildUpdate: true});
         this.addEnemy(1);
@@ -67,6 +63,8 @@ class Play extends Phaser.Scene {
         this.debugging_text = this.add.text(32, 400);
         this.debugging_text.setText("hit: " + String(this.hitpoint));
 
+        this.debugging_text2 = this.add.text(32, 700);
+
         // GAME OVER flag
         this.gameOver = false;
 
@@ -95,7 +93,9 @@ class Play extends Phaser.Scene {
 
     generateEnemy(){
         this.timePassed += 1;
-        this.level = this.timePassed / 5 + 1;
+        let t = this.timePassed;
+        this.level = -1/1200 * t * t + 0.1 * t;
+        this.debugging_text2.setText("speed: " + String(this.level));
         if( this.timePassed % 2 == 0){
             this.addEnemy(this.level);
         }
@@ -164,5 +164,6 @@ class Play extends Phaser.Scene {
         keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        pointer = this.input.activePointer;
     }
 }
