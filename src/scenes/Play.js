@@ -14,6 +14,8 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+
+        this.testval = 0;
         
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 1080, 720, 'starfield').setOrigin(0, 0);
@@ -21,9 +23,15 @@ class Play extends Phaser.Scene {
 
         player = new Rocket(this, 0, 0, 'self').setOrigin(0.5, 0.5);
         this.bullets = this.bullets = new Bullets(this);
+        /*
         this.input.on('pointerdown', (pointer) => {
             this.bullets.fireBullet(player.x, player.y);
         });
+        */
+        this.input.keyboard.on('keydown-F', () => {
+            this.bullets.fireBullet(player.x, player.y);
+        });
+
 
         this.input.keyboard.on('keydown-P', () => {
             this.physics.world.drawDebug = !this.physics.world.drawDebug;
@@ -37,7 +45,6 @@ class Play extends Phaser.Scene {
 
         this.enemy_group = this.add.group({runChildUpdate: true});
         this.addEnemy(1);
-        this.addEnemy2();
 
         
         // define keys
@@ -89,6 +96,7 @@ class Play extends Phaser.Scene {
         });
 
 
+        in_bossfight = false;
     }
 
     generateEnemy(){
@@ -96,11 +104,11 @@ class Play extends Phaser.Scene {
         let t = this.timePassed;
         this.level = -1/1200 * t * t + 0.1 * t;
         this.debugging_text2.setText("speed: " + String(this.level));
-        if( this.timePassed % 2 == 0){
-            this.addEnemy(this.level);
-        }
-        if(this.timePassed % 10 == 0){
-            this.addEnemy2();
+        
+        if(!in_bossfight){
+            if( this.timePassed % 2 == 0){
+                this.addEnemy(this.level);
+            }
         }
     }
 
@@ -113,6 +121,7 @@ class Play extends Phaser.Scene {
         this.boss = new CleverEnemy(this, "boss");
         this.enemy_group.add(this.boss);
     }
+
     enemyCollision(player, var2){
         this.hitpoint += 1;
         this.debugging_text.setText("hit: " + String(this.hitpoint));
@@ -122,10 +131,19 @@ class Play extends Phaser.Scene {
     }
 
     bullet_hit_enemy(enemy, var2){
-        enemy.destroy();
+        enemy.on_hit();
         var2.setActive(false);
         var2.setVisible(false);
         var2.y = 0;
+    }
+
+    on_kill(){
+        kill_count += 1;
+        if(kill_count == 2){
+            in_bossfight = true;
+            this.addEnemy2();
+            kill_count == 0;
+        }
     }
 
     update() {

@@ -76,14 +76,14 @@ class Bullet extends Phaser.Physics.Arcade.Sprite
         this.setActive(true);
         this.setVisible(true);
 
-        this.setVelocityX(500);
+        this.setVelocityX(700);
         this.setAccelerationX(1000);
     }
 
     preUpdate (time, delta)
     {
         super.preUpdate(time, delta);
-        if (this.x >= 700)
+        if (this.x >= game.config.width)
         {
             this.setActive(false);
             this.setVisible(false);

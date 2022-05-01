@@ -28,3 +28,5 @@ let centerX = game.config.width/2;
 let centerY = game.config.height/2;
 
 let player;
+let kill_count = 0;
+let in_bossfight = false;

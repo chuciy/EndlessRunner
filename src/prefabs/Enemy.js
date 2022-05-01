@@ -5,8 +5,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);    
         this.setImmovable();
 
-        const vx = -250;
-        this.setVelocityX(level * vx);                                       
+        const BASE_SPEED = -250;
+        this.setVelocityX(level * BASE_SPEED);
+        
 
     }
 
@@ -14,6 +15,11 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         if(this.x < -this.width) {
             this.destroy();
         }
+    }
+    on_hit(){
+        console.log(this.scene.testval);
+        this.scene.on_kill();
+        this.destroy();
     }
 }
 
@@ -29,8 +35,17 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
         this.time_count = 0;
         this.setMaxVelocity(600, 500);
 
-    }
+        this.hp = 2;
 
+    }
+    on_hit(){
+        this.hp -= 1;
+        if(this.hp == 0){
+            this.destroy();
+            in_bossfight = false;
+        }
+    }
+    
     update() {
 
         this.time_count++;
