@@ -19,13 +19,30 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
             DASH: 2
         };
         this.state = this.STATES.DEFAULT;
+
+        /*
+        let self = this;
+        scene.input.on("pointermove", function(pointer){
+            scene.tweens.add({
+                targets: self,
+                x: pointer.x,
+                y: pointer.y,
+                ease: 'Sine.easeOut',
+                duration: 1000,
+                onStart: function (tween, targets) {console.log(targets);},
+            });
+        });
+        */
+
+
     }
     update() {
         const BASE_SPEED = 200;
         if(this.state == this.STATES.DEFAULT){
-            this.setVelocityX(this.body.velocity.x * 0.99);
-            this.setVelocityY(this.body.velocity.y * 0.99);
-    
+            //this.setVelocityX(this.body.velocity.x * 0.99);
+            //this.setVelocityY(this.body.velocity.y * 0.99);
+            
+            /*
             let dirX =  pointer.x - this.x;
             let dirY =  pointer.y - this.y;
             if(pointer.isDown && Math.abs(dirX) >= 20 && Math.abs(dirY) >= 20){
@@ -35,21 +52,24 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
                 this.setVelocityY(dirY / sqrtXY * BASE_SPEED * this.moveSpeed);
                 
             }
+            */
+
+            this.scene.tweens.add({
+                targets: this,
+                x: pointer.x,
+                y: pointer.y,
+                ease: 'Sine.easeOut',
+                duration: 1000,
+                onStart: function (tween, targets) {},
+            });
         }
     }
 
     skill(){
         if(this.state == this.STATES.DEFAULT){
+            
             let dir = (pointer.position.subtract(this.getCenter())).normalize();
-            let tween = this.scene.tweens.add({
-                targets: this,
-                x: this.x + dir.x * 300,
-                y: this.y + dir.y * 300,
-                ease: 'Power1',
-                duration: 400,
-                onStart: function (tween, targets) {targets[0].state = targets[0].STATES.DASH;},
-                onComplete: function (tween, targets) {targets[0].state = targets[0].STATES.DEFAULT;},
-            });
+            
         }
         
     }

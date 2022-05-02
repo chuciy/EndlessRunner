@@ -22,8 +22,6 @@ class Play extends Phaser.Scene {
 
         player = new Rocket(this, 0, 0, 'self').setOrigin(0.5, 0.5);
 
-        let tst = new Phaser.Math.Vector2(10, 29);
-        console.log(tst.normalize());
 
         this.bullets = this.bullets = new Bullets(this);
         /*
