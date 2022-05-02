@@ -30,7 +30,7 @@ class Play extends Phaser.Scene {
         });
         */
         this.input.keyboard.on('keydown-F', () => {
-            this.bullets.fireBullet(player.x, player.y);
+            this.bullets.fireBullet(player.x + 46, player.y -26);
         });
 
 
