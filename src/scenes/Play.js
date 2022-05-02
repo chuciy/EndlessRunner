@@ -11,10 +11,12 @@ class Play extends Phaser.Scene {
         this.load.image('boss', './assets/boss.png');
         this.load.image('starfield', './assets/starfield.png');
         this.load.image('particle', './assets/particle.png');
+        this.load.image('item1', './assets/item1.png');
+        this.load.image('item2', './assets/item2.png');
     }
 
     create() {
-        
+        this.ITEMLIST = ["item1", "item2", "ITEM3"];
         
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 1080, 720, 'starfield').setOrigin(0, 0);
@@ -45,7 +47,14 @@ class Play extends Phaser.Scene {
 
 
         this.enemy_group = this.add.group({runChildUpdate: true});
+        this.item_group = this.add.group({runChildUpdate: true});
         this.addEnemy(1);
+
+        this.addItem();
+        this.addItem();
+        this.addItem();
+        this.addItem();
+
 
         
         // define keys
@@ -88,22 +97,19 @@ class Play extends Phaser.Scene {
         }, null, this);
 
         this.level = 0;
-        this.timePassed = 0;
-        this.generalTimer = this.time.addEvent({
-            delay: 1000,
-            callback: this.generateEnemy,
-            callbackScope: this,
-            loop: true
-        });
 
-
+        this.total_timer = 1;
+        this.loop_timer = 1;
         in_bossfight = false;
     }
+    
 
+    generateItem(){
+        console.log("test");
+    }
     generateEnemy(){
         if(!this.gameOver){
-            this.timePassed += 1;
-            let t = this.timePassed;
+            let t = this.total_timer;
             this.level = -1/1200 * t * t + 0.1 * t;
             this.debugging_text2.setText("speed: " + String(this.level));
             
@@ -116,13 +122,24 @@ class Play extends Phaser.Scene {
     }
 
     addEnemy(level) {
-        this.enemy = new Enemy(this, "enemy1", level);
-        this.enemy_group.add(this.enemy);
+        let enemy = new Enemy(this, "enemy1", level);
+        this.enemy_group.add(enemy);
     }
 
     addEnemy2(){
-        this.boss = new CleverEnemy(this, "boss");
-        this.enemy_group.add(this.boss);
+        let boss = new CleverEnemy(this, "boss");
+        this.enemy_group.add(boss);
+    }
+
+    addItem(){
+        let r = Math.floor(Math.random() * 2);
+        let item = new Item(this, this.ITEMLIST[r]);
+        this.item_group.add(item);
+    }
+
+    itemCollision(player, var2){
+        
+        var2.on_collide();
     }
 
     enemyCollision(player, var2){
@@ -149,7 +166,26 @@ class Play extends Phaser.Scene {
         }
     }
 
-    update() {
+    update(time, delta) {
+        this.loop_timer += delta;
+        if(this.loop_timer >= 1000){
+            this.total_timer += 1;
+            this.loop_timer -= 1000;
+
+            this.level = -1/1200 * this.total_timer * this.total_timer + 0.1 * this.total_timer;
+            this.debugging_text2.setText("speed: " + String(this.level));
+
+            if(this.total_timer % 2 == 0){
+                if(!this.gameOver){
+                    if(!in_bossfight){
+                        this.addEnemy(this.level);
+                    }            
+                }
+            }
+            if(this.total_timer % 10 == 0){
+                this.addItem();
+            }
+        }
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
@@ -162,7 +198,8 @@ class Play extends Phaser.Scene {
         this.starfield.tilePositionX -= (4 + this.level);  // update tile sprite
 
         if(!this.gameOver) {
-            
+
+            this.physics.world.collide(player, this.item_group, this.itemCollision, null, this);
             this.physics.world.collide(player, this.enemy_group, this.enemyCollision, null, this);
             this.physics.world.collide(this.bullets, this.enemy_group, this.bullet_hit_enemy, null, this);
             //timer

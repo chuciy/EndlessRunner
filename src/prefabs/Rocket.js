@@ -39,21 +39,23 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
     update() {
         const BASE_SPEED = 200;
         if(this.state == this.STATES.DEFAULT){
-            //this.setVelocityX(this.body.velocity.x * 0.99);
-            //this.setVelocityY(this.body.velocity.y * 0.99);
+            this.setVelocityX(this.body.velocity.x * 0.99);
+            this.setVelocityY(this.body.velocity.y * 0.99);
             
-            /*
+            
             let dirX =  pointer.x - this.x;
             let dirY =  pointer.y - this.y;
-            if(pointer.isDown && Math.abs(dirX) >= 20 && Math.abs(dirY) >= 20){
+
+            //if(pointer.isDown){
                 
                 let sqrtXY = Math.sqrt(dirX * dirX + dirY * dirY);
                 this.setVelocityX(dirX / sqrtXY * BASE_SPEED * this.moveSpeed);
                 this.setVelocityY(dirY / sqrtXY * BASE_SPEED * this.moveSpeed);
                 
-            }
-            */
+            //}
+            
 
+            /*
             this.scene.tweens.add({
                 targets: this,
                 x: pointer.x,
@@ -62,6 +64,7 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
                 duration: 1000,
                 onStart: function (tween, targets) {},
             });
+            */
         }
     }
 
@@ -69,6 +72,9 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
         if(this.state == this.STATES.DEFAULT){
             
             let dir = (pointer.position.subtract(this.getCenter())).normalize();
+            console.log(dir);
+            this.x = dir.x * 200;
+            this.y = dir.y * 200;
             
         }
         
