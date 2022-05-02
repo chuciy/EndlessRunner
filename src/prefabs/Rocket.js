@@ -46,16 +46,17 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
             let dirX =  pointer.x - this.x;
             let dirY =  pointer.y - this.y;
 
-            //if(pointer.isDown){
+            /*
+            if(pointer.isDown){
                 
                 let sqrtXY = Math.sqrt(dirX * dirX + dirY * dirY);
                 this.setVelocityX(dirX / sqrtXY * BASE_SPEED * this.moveSpeed);
                 this.setVelocityY(dirY / sqrtXY * BASE_SPEED * this.moveSpeed);
                 
-            //}
-            
+            }
+            */
 
-            /*
+            
             this.scene.tweens.add({
                 targets: this,
                 x: pointer.x,
@@ -64,7 +65,7 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
                 duration: 1000,
                 onStart: function (tween, targets) {},
             });
-            */
+            
         }
     }
 
