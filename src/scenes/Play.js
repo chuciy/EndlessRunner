@@ -5,8 +5,8 @@ class Play extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-        this.load.image('self', './assets/player.png');
-        this.load.image('bullet', './assets/bullet.png');
+        this.load.image('self', './assets/player_1.png');
+        this.load.image('bullet', './assets/magic_bullet.png');
         this.load.image('enemy1', './assets/enemy1.png');
         this.load.image('boss', './assets/boss.png');
         this.load.image('starfield', './assets/starfield.png');
@@ -159,7 +159,7 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
         }
 
-        this.starfield.tilePositionX -= (4 + this.level);  // update tile sprite
+        this.starfield.tilePositionX += (4 + this.level);  // update tile sprite
 
         if(!this.gameOver) {
             
