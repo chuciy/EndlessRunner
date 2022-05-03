@@ -37,46 +37,67 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
 
     }
     update() {
-        const BASE_SPEED = 200;
+        const BASE_SPEED = 135;
         if(this.state == this.STATES.DEFAULT){
-            this.setVelocityX(this.body.velocity.x * 0.99);
-            this.setVelocityY(this.body.velocity.y * 0.99);
-            
             
             let dirX =  pointer.x - this.x;
             let dirY =  pointer.y - this.y;
 
-            /*
-            if(pointer.isDown){
-                
+            
+            if((dirX * dirX + dirY * dirY)  >= 50){
                 let sqrtXY = Math.sqrt(dirX * dirX + dirY * dirY);
                 this.setVelocityX(dirX / sqrtXY * BASE_SPEED * this.moveSpeed);
                 this.setVelocityY(dirY / sqrtXY * BASE_SPEED * this.moveSpeed);
                 
+            }else{
+                this.setVelocityX(0);
+                this.setVelocityY(0);
             }
-            */
-
             
-            this.scene.tweens.add({
+
+            /*
+            this.movement = this.scene.tweens.add({
                 targets: this,
                 x: pointer.x,
                 y: pointer.y,
-                ease: 'Sine.easeOut',
+                ease: 'Power0',
                 duration: 1000,
                 onStart: function (tween, targets) {},
             });
-            
+            */
         }
     }
 
     skill(){
+
         if(this.state == this.STATES.DEFAULT){
-            
-            let dir = (pointer.position.subtract(this.getCenter())).normalize();
-            console.log(dir);
-            this.x = dir.x * 200;
-            this.y = dir.y * 200;
-            
+
+            const RANGE = 150;
+            this.tst = this.scene.tweens.add({
+                targets: this,
+                alpha: { from: 0, to: 1 }, 
+                duration: 200, 
+                onStart: function (tween, target) {
+                    let self = target[0];
+                    let dirX =  pointer.x - self.x;
+                    let dirY =  pointer.y - self.y;
+                    let sqrtXY = Math.sqrt(dirX * dirX + dirY * dirY);
+
+                    if(dirX * dirX + dirY * dirY <= RANGE * RANGE){
+                        self.setVelocityX(self.body.velocity.x * 0);
+                        self.setVelocityY(self.body.velocity.y * 0);
+                        self.x = pointer.x;
+                        self.y = pointer.y;
+                    }else{
+                        self.x += dirX / sqrtXY * RANGE;
+                        self.y += dirY / sqrtXY * RANGE;
+                    }
+                    target[0].state = target[0].STATES.DASH;
+                },
+                onComplete: function (tween, target) {target[0].state = target[0].STATES.DEFAULT;}
+            });
+
+             
         }
         
     }
