@@ -88,7 +88,7 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
                         self.setVelocityY(self.body.velocity.y * 0);
                         self.x = pointer.x;
                         self.y = pointer.y;
-                    }else{
+                    }else{wa
                         self.x += dirX / sqrtXY * RANGE;
                         self.y += dirY / sqrtXY * RANGE;
                     }
