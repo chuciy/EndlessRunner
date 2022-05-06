@@ -42,7 +42,10 @@ class Play extends Phaser.Scene {
         });
 
         this.input.keyboard.on('keydown-SPACE', () => {
+            //let cooldown = this.total_timer - 3;
+            //if(cooldown < ){
             player.skill();
+            //}
         });
 
 
