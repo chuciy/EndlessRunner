@@ -36,10 +36,14 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
         //this.setVelocityX(-100);                             
         this.setCollideWorldBounds(true);
         this.setBounce(0.5);
-        this.time_count = 0;
+
+        this.shoot_cooldown = 0;
+
         this.setMaxVelocity(600, 500);
 
         this.hp = 2;
+
+        this.projectiles = scene.projectiles;
 
     }
     on_hit(){
@@ -54,19 +58,23 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
         
     }
     
-    update() {
+    update(time, delta) {
+        this.shoot_cooldown += delta;
 
-        this.time_count++;
+        if(this.shoot_cooldown >= 2000){
+            this.shoot_cooldown -= 2000;
+            this.setAccelerationX((Math.random() - 0.5) * 500);
+            this.setAccelerationY((Math.random() - 0.5) * 500);
+            this.projectiles.fireBullet(this.x, this.y);
+        }
+
+
         if(this.x <= game.config.width / 2){
             this.setVelocityX(250);
         }
-        if(this.time_count == 144){
-            //console.log(this.body.velocity);
-            this.time_count = 0;
-            this.setAccelerationX((Math.random() - 0.5) * 500);
-            this.setAccelerationY((Math.random() - 0.5) * 500);
-        }
+
 
         this.setRotation(Math.atan((this.y - player.y) / (this.x - player.x))); //rotate towards player
     }
 }
+

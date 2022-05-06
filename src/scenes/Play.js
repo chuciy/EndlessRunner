@@ -13,6 +13,7 @@ class Play extends Phaser.Scene {
         this.load.image('particle', './assets/particle.png');
         this.load.image('item1', './assets/item1.png');
         this.load.image('item2', './assets/item2.png');
+        this.load.image('projectile', './assets/projectile.png');
     }
 
     create() {
@@ -25,7 +26,8 @@ class Play extends Phaser.Scene {
         player = new Rocket(this, 0, 0, 'self').setOrigin(0.5, 0.5);
 
 
-        this.bullets = this.bullets = new Bullets(this);
+        this.bullets = new Bullets(this);
+        this.projectiles = new Projectiles(this);
         /*
         this.input.on('pointerdown', (pointer) => {
             this.bullets.fireBullet(player.x, player.y);
@@ -172,6 +174,7 @@ class Play extends Phaser.Scene {
     update(time, delta) {
         this.loop_timer += delta;
         if(this.loop_timer >= 1000){
+
             this.total_timer += 1;
             this.loop_timer -= 1000;
 

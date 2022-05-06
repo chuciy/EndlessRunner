@@ -88,7 +88,7 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
                         self.setVelocityY(self.body.velocity.y * 0);
                         self.x = pointer.x;
                         self.y = pointer.y;
-                    }else{wa
+                    }else{
                         self.x += dirX / sqrtXY * RANGE;
                         self.y += dirY / sqrtXY * RANGE;
                     }
@@ -104,57 +104,3 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
     
 }
 
-class Bullets extends Phaser.Physics.Arcade.Group
-{
-    constructor (scene)
-    {
-        super(scene.physics.world, scene);
-
-        this.createMultiple({
-            frameQuantity: 3,
-            key: 'bullet',
-            active: false,
-            visible: false,
-            classType: Bullet
-        });
-    }
-
-    fireBullet (x, y)
-    {
-        let bullet = this.getFirstDead(false);
-
-        if (bullet)
-        {
-            bullet.fire(x, y);
-        }
-    }
-}
-
-class Bullet extends Phaser.Physics.Arcade.Sprite
-{
-    constructor (scene, x, y)
-    {
-        super(scene, x, y, 'bullet');
-    }
-
-    fire (x, y)
-    {
-        this.body.reset(x, y);
-
-        this.setActive(true);
-        this.setVisible(true);
-
-        this.setVelocityX(350);
-        this.setAccelerationX(500);
-    }
-
-    preUpdate (time, delta)
-    {
-        super.preUpdate(time, delta);
-        if (this.x >= game.config.width)
-        {
-            this.setActive(false);
-            this.setVisible(false);
-        }
-    }
-}
