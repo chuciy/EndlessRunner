@@ -94,7 +94,6 @@ class Projectile extends Phaser.Physics.Arcade.Sprite
     {
         let dirX =  player.x - sx;
         let dirY =  player.y - sy;
-        console.log(this);
         this.body.reset(sx, sy);
         this.setRotation(Math.atan((dirY) / (dirX)));
 
