@@ -114,7 +114,7 @@ class Play extends Phaser.Scene {
         console.log("Bosskilled");
         current_phase++;
         in_bossfight = false;
-        this.background.setTexture(this.BGLIST[current_phase % 2]);
+        this.background.setTexture(this.BGLIST[current_phase < 2 ? 0 : 1]);
     }
 
     generateItem(){
