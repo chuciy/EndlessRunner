@@ -54,6 +54,18 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
     }
     on_hit(){
         this.hp -= 1;
+        let tintTween = this.scene.tweens.add(
+            {
+                targets: this,
+                duration: 1000,
+                tint: 0xfacade,
+                callbackScope: this,
+                onComplete: function(tween, sprites) {
+                    console.log(this);
+                    this.clearTint();
+                }
+            }
+        )
         if(this.hp == 0){
             this.scene.onKillingBoss();
             this.destroy();

@@ -18,6 +18,9 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        this.physics.world.drawDebug = !this.physics.world.drawDebug;
+        this.physics.world.debugGraphic.clear();
+
         this.ITEMLIST = ["item1", "item2", "ITEM3"];
         this.BGLIST = ['starfield', 'bloodmoon']
         
@@ -114,7 +117,7 @@ class Play extends Phaser.Scene {
         console.log("Bosskilled");
         current_phase++;
         in_bossfight = false;
-        this.background.setTexture(this.BGLIST[current_phase % 2]);
+        this.background.setTexture(this.BGLIST[current_phase < 2 ? 0 : 1]);
     }
 
     generateItem(){

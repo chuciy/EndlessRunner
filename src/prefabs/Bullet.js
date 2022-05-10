@@ -74,11 +74,21 @@ class Projectiles extends Phaser.Physics.Arcade.Group
 
     fireBullet (sx, sy)
     {
-        let bullet = this.getFirstDead(false);
+        /*
+        let bullet1 = this.getFirstDead(false);
+        let bullet2 = this.getFirstDead(false);
+        let bullet3 = this.getFirstDead(false);
 
-        if (bullet)
+        if (bullet1)
         {
-            bullet.fire(sx, sy);
+            bullet1.fire(sx, sy, 0);
+            bullet2.fire(sx, sy, -50); 
+            bullet3.fire(sx, sy, 50);
+        }
+        */
+        for(let i = -50; i <= 50; i += 50){
+            let bullet = this.getFirstDead(false);
+            bullet.fire(sx, sy, i);
         }
     }
 }
@@ -90,10 +100,10 @@ class Projectile extends Phaser.Physics.Arcade.Sprite
         super(scene, x, y, 'projectile');
     }
 
-    fire (sx, sy)
+    fire (sx, sy, offy)
     {
         let dirX =  player.x - sx;
-        let dirY =  player.y - sy;
+        let dirY =  player.y - sy + offy;
         this.body.reset(sx, sy);
         this.setRotation(Math.atan((dirY) / (dirX)));
 
