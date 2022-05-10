@@ -10,6 +10,7 @@ class Play extends Phaser.Scene {
         this.load.image('enemy1', './assets/enemy1.png');
         this.load.image('boss', './assets/boss.png');
         this.load.image('starfield', './assets/night_background.png');
+        this.load.image('bloodmoon', './assets/blood_moon_background.png');
         this.load.image('particle', './assets/particle.png');
         this.load.image('item1', './assets/item1.png');
         this.load.image('item2', './assets/item2.png');
@@ -18,9 +19,10 @@ class Play extends Phaser.Scene {
 
     create() {
         this.ITEMLIST = ["item1", "item2", "ITEM3"];
+        this.BGLIST = ['starfield', 'bloodmoon']
         
         // place tile sprite
-        this.starfield = this.add.tileSprite(0, 0, 1080, 720, 'starfield').setOrigin(0, 0);
+        this.background = this.add.image(0, 0, 'starfield').setOrigin(0, 0);
         // green UI background
 
         player = new Rocket(this, 0, 0, 'self').setOrigin(0.5, 0.5);
@@ -108,6 +110,12 @@ class Play extends Phaser.Scene {
         in_bossfight = false;
     }
     
+    onKillingBoss(){
+        console.log("Bosskilled");
+        current_phase++;
+        in_bossfight = false;
+        this.background.setTexture(this.BGLIST[current_phase % 2]);
+    }
 
     generateItem(){
         console.log("test");
@@ -143,14 +151,12 @@ class Play extends Phaser.Scene {
     }
 
     itemCollision(player, var2){
-        
         var2.on_collide();
     }
 
     enemyCollision(player, var2){
         this.hitpoint += 1;
         this.debugging_text.setText("hit: " + String(this.hitpoint));
-        console.log(var2.body.velocity);
         var2.destroy();
         
     }
@@ -164,10 +170,10 @@ class Play extends Phaser.Scene {
 
     on_kill(){
         kill_count += 1;
-        if(kill_count == 2){
+        console.log(kill_count);
+        if(kill_count % 3 == 0){
             in_bossfight = true;
             this.addEnemy2();
-            kill_count == 0;
         }
     }
 
@@ -201,7 +207,7 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
         }
 
-        this.starfield.tilePositionX += (4 + this.level);  // update tile sprite
+        //this.starfield.tilePositionX += (4 + this.level);  // update tile sprite
 
         if(!this.gameOver) {
 

@@ -31,4 +31,6 @@ let player;
 let kill_count = 0;
 let in_bossfight = false;
 
+let current_phase = 0;
+
 let padding = 70;
