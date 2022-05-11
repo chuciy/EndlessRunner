@@ -4,6 +4,7 @@ class Menu extends Phaser.Scene {
     }
 
     preload() {
+      this.load.image('cover', './assets/Night_of_the_Hunt.png');
     }
 
     create() {
@@ -11,18 +12,21 @@ class Menu extends Phaser.Scene {
         let menuConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'right',
+            backgroundColor: '#101010',
+            color: '#FFFFFF',
+            align: 'left',
             padding: {
                 top: 5,
                 bottom: 5,
             },
             fixedWidth: 0
         }
+
+        this.background = this.add.image(0, 0, 'cover').setOrigin(0, 0);
         // show menu text
-        this.add.text(game.config.width/2, game.config.height/2, 'W to start, P to turn on/off debug', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + 50, 'WASD moving, left key to shoot', menuConfig).setOrigin(0.5);
+
+        this.add.text(10, game.config.height/1.5, 'W to start, P to turn on/off debug', menuConfig).setOrigin(0);
+        this.add.text(10, game.config.height/1.5 + 50, ' Mouse moving,\n F to fire, SPACE to dodge', menuConfig).setOrigin(0);
         // define keys
         keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.keyLEFT);

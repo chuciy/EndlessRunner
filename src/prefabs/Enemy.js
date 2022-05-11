@@ -41,7 +41,7 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
 
         this.setMaxVelocity(600, 500);
 
-        this.hp = 10;
+        this.hp = 6 + (Math.floor(Math.random() * 3) - 1);
         this.curvex = [0, 270, 70, 0];
         this.curvey = [0, 180, -360, 270];
 
@@ -51,15 +51,29 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
         this.v2 = new Phaser.Math.Vector2();
         this.t = 0;
 
+        this.rotate = 0;
+
     }
     on_hit(){
         this.hp -= 1;
-        
+        console.log("remain: "+ String(this.hp));
+
         if(this.hp == 0){
             this.scene.onKillingBoss();
             this.destroy();
             in_bossfight = false;
+            return;
         }
+
+        this.curve();
+
+        this.scene.time.addEvent({
+            delay: 1000,
+            callback: function(){ 
+                //this.curve();
+            },
+            callbackScope: this,
+        });
     }
 
     on_collide(){
@@ -81,8 +95,10 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
 
             let dx = Phaser.Math.Interpolation.Bezier(this.curvex, this.t / 1500);
             let dy = Phaser.Math.Interpolation.Bezier(this.curvey, this.t / 1500);
-            this.x = Math.max(Math.min(this.v2.x + dx, 1040), 540);
-            this.y = Math.max(Math.min(this.v2.y + dy, 680), 40);
+            let v = new Phaser.Math.Vector2(dx, dy);
+            v.rotate(this.rotate);
+            this.x = Math.max(Math.min(this.v2.x + v.x, 1040), 540);
+            this.y = Math.max(Math.min(this.v2.y + v.y, 680), 40);
 
         }
 
@@ -90,7 +106,7 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
         if(this.x <= game.config.width / 2){
             this.setVelocityX(250);
         }
-
+        /*
         if(Phaser.Input.Keyboard.JustDown(keyE)) {
             this.move = true;
             this.v2 = new Phaser.Math.Vector2(this.x, this.y);
@@ -102,13 +118,22 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
                 k.move = false;
             }, null, this);
         }
-
+        */
 
         this.setRotation(Math.atan((this.y - player.y) / (this.x - player.x))); //rotate towards player
     }
 
-    curve(x, y){
-
+    curve(){
+        this.move = true;
+        this.v2 = new Phaser.Math.Vector2(this.x, this.y);
+        this.t = 0;
+        this.rotate = Math.random() * 2 * Math.PI;
+        this.setVelocity(0, 0);
+        this.setAcceleration(0, 0);
+        let k = this;
+        this.scene.time.delayedCall(1500, () => {
+            k.move = false;
+        }, null, this);
     }
 }
 

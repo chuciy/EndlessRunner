@@ -91,13 +91,6 @@ class Play extends Phaser.Scene {
         this.enemy_group = this.add.group({runChildUpdate: true});
         this.item_group = this.add.group({runChildUpdate: true});
         this.addEnemy(1);
-
-        this.addItem();
-        this.addItem();
-        this.addItem();
-        this.addItem();
-
-
         
         // define keys
         this.defineKeys();
@@ -199,7 +192,7 @@ class Play extends Phaser.Scene {
     enemyCollision(player, var2){
         this.hitpoint += 1;
         this.debugging_text.setText("hit: " + String(this.hitpoint));
-        var2.destroy();
+        var2.on_hit();
         
     }
 
