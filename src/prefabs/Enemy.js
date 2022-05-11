@@ -54,18 +54,7 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
     }
     on_hit(){
         this.hp -= 1;
-        let tintTween = this.scene.tweens.add(
-            {
-                targets: this,
-                duration: 1000,
-                tint: 0xfacade,
-                callbackScope: this,
-                onComplete: function(tween, sprites) {
-                    console.log(this);
-                    this.clearTint();
-                }
-            }
-        )
+        
         if(this.hp == 0){
             this.scene.onKillingBoss();
             this.destroy();
@@ -88,7 +77,6 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
                 this.projectiles.fireBullet(this.x, this.y);
             }
         }else{
-            console.log('k');
             this.t += delta;
 
             let dx = Phaser.Math.Interpolation.Bezier(this.curvex, this.t / 1500);
@@ -113,7 +101,6 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
             this.scene.time.delayedCall(1500, () => {
                 k.move = false;
             }, null, this);
-            console.log(this.v2);
         }
 
 

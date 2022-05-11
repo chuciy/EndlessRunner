@@ -40,6 +40,8 @@ class Bullet extends Phaser.Physics.Arcade.Sprite
         this.setActive(true);
         this.setVisible(true);
 
+        this.anims.play('bullet', true);  
+
         this.setVelocityX(350);
         this.setAccelerationX(500);
     }
@@ -76,14 +78,9 @@ class Projectiles extends Phaser.Physics.Arcade.Group
     {
         /*
         let bullet1 = this.getFirstDead(false);
-        let bullet2 = this.getFirstDead(false);
-        let bullet3 = this.getFirstDead(false);
-
         if (bullet1)
         {
-            bullet1.fire(sx, sy, 0);
-            bullet2.fire(sx, sy, -50); 
-            bullet3.fire(sx, sy, 50);
+            bullet1.fire(sx, sy);
         }
         */
         for(let i = -50; i <= 50; i += 50){
@@ -109,6 +106,8 @@ class Projectile extends Phaser.Physics.Arcade.Sprite
 
         this.setActive(true);
         this.setVisible(true);
+
+        this.anims.play('projectile', true);  
 
 
         let sqrtXY = Math.sqrt(dirX * dirX + dirY * dirY);

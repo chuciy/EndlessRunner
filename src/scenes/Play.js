@@ -6,15 +6,49 @@ class Play extends Phaser.Scene {
     preload() {
         // load images/tile sprites
         this.load.image('self', './assets/player_1.png');
-        this.load.image('bullet', './assets/magic_bullet.png');
-        this.load.image('enemy1', './assets/enemy1.png');
-        this.load.image('boss', './assets/boss.png');
+        //this.load.image('bullet', './assets/magic_bullet.png');
+        //this.load.image('enemy1', './assets/enemy1.png');
+        //this.load.image('boss', './assets/boss.png');
         this.load.image('starfield', './assets/night_background.png');
         this.load.image('bloodmoon', './assets/blood_moon_background.png');
         this.load.image('particle', './assets/particle.png');
         this.load.image('item1', './assets/item1.png');
         this.load.image('item2', './assets/item2.png');
-        this.load.image('projectile', './assets/projectile.png');
+        this.load.image('forest', './assets/Forest_Background.png');
+        //this.load.image('projectile', './assets/projectile.png');
+
+        this.load.spritesheet('boss', './assets/Spirit_Archer-Sheet.png', {frameWidth: 96, frameHeight: 128, startFrame: 0, endFrame: 3});
+        this.load.spritesheet('projectile', './assets/Spirit_Arrow-Sheet.png', {frameWidth: 128, frameHeight: 32, startFrame: 0, endFrame: 1});
+        this.load.spritesheet('bullet', './assets/magic_bullet-Sheet.png', {frameWidth: 48, frameHeight: 32, startFrame: 0, endFrame: 6});
+        this.load.spritesheet('enemy1', './assets/Spirit_enemy-Sheet.png', {frameWidth: 64, frameHeight: 48, startFrame: 0, endFrame: 3});
+    }
+    create_animation(){
+        this.anims.create({
+            key: 'boss',
+            frames: 'boss',
+            frameRate: 20,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'projectile',
+            frames: 'projectile',
+            frameRate: 20,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'bullet',
+            frames: 'bullet',
+            frameRate: 20,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'enemy1',
+            frames: 'enemy1',
+            frameRate: 20,
+            repeat: -1
+        });
+
+
     }
 
     create() {
@@ -24,20 +58,18 @@ class Play extends Phaser.Scene {
         this.ITEMLIST = ["item1", "item2", "ITEM3"];
         this.BGLIST = ['starfield', 'bloodmoon']
         
-        // place tile sprite
+        this.create_animation();
+
         this.background = this.add.image(0, 0, 'starfield').setOrigin(0, 0);
-        // green UI background
+        this.forest = this.add.tileSprite(0, 0, 1080, 720, 'forest').setOrigin(0, 0);
+
 
         player = new Rocket(this, 0, 0, 'self').setOrigin(0.5, 0.5);
 
 
         this.bullets = new Bullets(this);
         this.projectiles = new Projectiles(this);
-        /*
-        this.input.on('pointerdown', (pointer) => {
-            this.bullets.fireBullet(player.x, player.y);
-        });
-        */
+
         this.input.keyboard.on('keydown-F', () => {
             this.bullets.fireBullet(player.x + 46, player.y -26);
         });
@@ -97,6 +129,7 @@ class Play extends Phaser.Scene {
 
 
         scoreConfig.fixedWidth = 0;
+        /*
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← to Menu', scoreConfig).setOrigin(0.5);
@@ -105,12 +138,16 @@ class Play extends Phaser.Scene {
             highscore = Math.max(highscore, this.p1Score);
             this.scoreRight = highscore;
         }, null, this);
+        */
 
         this.level = 0;
 
         this.total_timer = 1;
         this.loop_timer = 1;
         in_bossfight = false;
+
+
+        
     }
     
     onKillingBoss(){
@@ -140,11 +177,13 @@ class Play extends Phaser.Scene {
     addEnemy(level) {
         let enemy = new Enemy(this, "enemy1", level);
         this.enemy_group.add(enemy);
+        enemy.anims.play('enemy1', true);  
     }
 
     addEnemy2(){
         let boss = new CleverEnemy(this, "boss");
         this.enemy_group.add(boss);
+        boss.anims.play('boss', true);  
     }
 
     addItem(){
@@ -168,7 +207,7 @@ class Play extends Phaser.Scene {
         enemy.on_hit();
         var2.setActive(false);
         var2.setVisible(false);
-        var2.y = 0;
+        var2.y = -50;
     }
 
     on_kill(){
@@ -178,6 +217,14 @@ class Play extends Phaser.Scene {
             in_bossfight = true;
             this.addEnemy2();
         }
+    }
+
+    player_on_hit(player, ps){
+        this.hitpoint += 1;
+        this.debugging_text.setText("hit: " + String(this.hitpoint));
+        ps.setActive(false);
+        ps.setVisible(false);
+        ps.y = -50;
     }
 
     update(time, delta) {
@@ -201,6 +248,10 @@ class Play extends Phaser.Scene {
                 this.addItem();
             }
         }
+
+        this.forest.tilePositionX += 2.0 * this.level;
+
+
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
@@ -216,9 +267,9 @@ class Play extends Phaser.Scene {
 
             this.physics.world.collide(player, this.item_group, this.itemCollision, null, this);
             this.physics.world.collide(player, this.enemy_group, this.enemyCollision, null, this);
+            this.physics.world.collide(player, this.projectiles, this.player_on_hit, null, this);
             this.physics.world.collide(this.bullets, this.enemy_group, this.bullet_hit_enemy, null, this);
-            //timer
-            this.timer_text.setText('Time remaining: ' + this.clock.getRemainingSeconds().toString().substr(0, 4));
+
             // ----------------------
             player.update();    
         }
