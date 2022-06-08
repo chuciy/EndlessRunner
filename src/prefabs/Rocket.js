@@ -12,6 +12,9 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
 
         this.count = 0;
 
+
+        this.hp = 20;
+        
         //state
         
         this.STATES = {
