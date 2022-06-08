@@ -5,6 +5,17 @@ class Menu extends Phaser.Scene {
 
     preload() {
       this.load.image('cover', './assets/Night_of_the_Hunt.png');
+
+
+
+      this.load.audio('bgm', 'assets/background_music .mp3');
+      this.load.audio('sfx_arrow', 'assets/sfx_arrow.wav');
+      this.load.audio('sfx_bloodmoon', 'assets/sfx_bloodmoon.wav');
+      this.load.audio('sfx_enemy_death', 'assets/sfx_enemy_death.wav');
+      this.load.audio('sfx_magic_bullet', 'assets/sfx_magic_bullet.wav');
+      this.load.audio('sfx_miniboss_death', 'assets/sfx_miniboss_death.wav');
+      this.load.audio('sfx_player_hurt', 'assets/sfx_player_hurt.wav');
+      this.load.audio('sfx_teleport', 'assets/sfx_teleport.wav');
     }
 
     create() {

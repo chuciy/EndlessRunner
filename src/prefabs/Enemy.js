@@ -16,6 +16,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         }
     }
     on_hit(){
+        this.scene.sound.play("sfx_enemy_death");
         this.scene.on_kill();
         this.destroy();
     }
@@ -59,6 +60,7 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
         console.log("remain: "+ String(this.hp));
 
         if(this.hp == 0){
+            this.scene.sound.play("sfx_miniboss_death");
             this.scene.onKillingBoss();
             this.destroy();
             in_bossfight = false;
@@ -85,6 +87,7 @@ class CleverEnemy extends Phaser.Physics.Arcade.Sprite {
 
         if(!this.move){
             if(this.shoot_cooldown >= 2000){
+                this.scene.sound.play("sfx_arrow");
                 this.shoot_cooldown -= 2000;
                 this.setAccelerationX((Math.random() - 0.5) * 500);
                 this.setAccelerationY((Math.random() - 0.5) * 500);

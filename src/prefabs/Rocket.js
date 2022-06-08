@@ -14,7 +14,7 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
 
 
         this.hp = 20;
-        
+
         //state
         
         this.STATES = {
@@ -76,6 +76,7 @@ class Rocket extends Phaser.Physics.Arcade.Sprite {
         if(this.state == this.STATES.DEFAULT){
 
             const RANGE = 150;
+            this.scene.sound.play("sfx_teleport");
             this.tst = this.scene.tweens.add({
                 targets: this,
                 alpha: { from: 0, to: 1 }, 

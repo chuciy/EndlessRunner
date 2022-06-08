@@ -78,6 +78,8 @@ class Play extends Phaser.Scene {
         this.cam = this.cameras.main;
 
 
+        this.bgm = this.sound.play("bgm", {loop: -1});
+
         player = new Rocket(this, 0, 0, 'player_idle').setOrigin(0.5, 0.5);
         player.anims.play("player_idle");
 
@@ -86,6 +88,7 @@ class Play extends Phaser.Scene {
         this.projectiles = new Projectiles(this);
 
         this.input.keyboard.on('keydown-F', () => {
+            this.sound.play("sfx_magic_bullet");
             this.bullets.fireBullet(player.x + 46, player.y -26);
         });
 
@@ -165,6 +168,10 @@ class Play extends Phaser.Scene {
         current_phase++;
         in_bossfight = false;
         this.background.setTexture(this.BGLIST[current_phase < 2 ? 0 : 1]);
+        if(current_phase == 2){
+            this.sound.play("sfx_bloodmoon");
+
+        }
     }
 
     generateItem(){
@@ -207,6 +214,7 @@ class Play extends Phaser.Scene {
     }
 
     enemyCollision(player, var2){
+        this.sound.play("sfx_player_hurt");
         this.hitpoint += 1;
         var2.on_hit();
         
@@ -229,6 +237,7 @@ class Play extends Phaser.Scene {
     }
 
     player_on_hit(player, ps){
+        this.sound.play("sfx_player_hurt");
         this.hitpoint += 1;
         ps.setActive(false);
         ps.setVisible(false);
