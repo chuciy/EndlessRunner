@@ -21,11 +21,21 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('projectile', './assets/Spirit_Arrow-Sheet.png', {frameWidth: 128, frameHeight: 32, startFrame: 0, endFrame: 1});
         this.load.spritesheet('bullet', './assets/magic_bullet-Sheet.png', {frameWidth: 48, frameHeight: 32, startFrame: 0, endFrame: 6});
         this.load.spritesheet('enemy1', './assets/Spirit_enemy-Sheet.png', {frameWidth: 64, frameHeight: 48, startFrame: 0, endFrame: 3});
+
+
+
+        this.load.spritesheet('player_idle', './assets/witch_player-sheet.png', {frameWidth: 138, frameHeight: 96, startFrame: 0, endFrame: 3});
     }
     create_animation(){
         this.anims.create({
             key: 'boss',
             frames: 'boss',
+            frameRate: 20,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'player_idle',
+            frames: 'player_idle',
             frameRate: 20,
             repeat: -1
         });
@@ -63,8 +73,13 @@ class Play extends Phaser.Scene {
         this.background = this.add.image(0, 0, 'starfield').setOrigin(0, 0);
         this.forest = this.add.tileSprite(0, 0, 1080, 720, 'forest').setOrigin(0, 0);
 
+        this.p_health_bar = this.makeBar(10,20,0x2ecc71)
+        this.end = false;
+        this.cam = this.cameras.main;
 
-        player = new Rocket(this, 0, 0, 'self').setOrigin(0.5, 0.5);
+
+        player = new Rocket(this, 0, 0, 'player_idle').setOrigin(0.5, 0.5);
+        player.anims.play("player_idle");
 
 
         this.bullets = new Bullets(this);
@@ -110,12 +125,7 @@ class Play extends Phaser.Scene {
         }
 
         this.hitpoint = 0;
-        // #text
-        this.timer_text = this.add.text(32, 32);
-        this.debugging_text = this.add.text(32, 400);
-        this.debugging_text.setText("hit: " + String(this.hitpoint));
 
-        this.debugging_text2 = this.add.text(32, 700);
 
         // GAME OVER flag
         this.gameOver = false;
@@ -138,6 +148,13 @@ class Play extends Phaser.Scene {
         this.total_timer = 1;
         this.loop_timer = 1;
         in_bossfight = false;
+
+        // #text
+        this.timer_text = this.add.text(32, 32);
+        this.debugging_text = this.add.text(32, 400);
+        this.debugging_text.setText("Distance: " + String(this.total_timer));
+
+        this.debugging_text2 = this.add.text(32, 700);
 
 
         
@@ -191,7 +208,6 @@ class Play extends Phaser.Scene {
 
     enemyCollision(player, var2){
         this.hitpoint += 1;
-        this.debugging_text.setText("hit: " + String(this.hitpoint));
         var2.on_hit();
         
     }
@@ -214,14 +230,52 @@ class Play extends Phaser.Scene {
 
     player_on_hit(player, ps){
         this.hitpoint += 1;
-        this.debugging_text.setText("hit: " + String(this.hitpoint));
         ps.setActive(false);
         ps.setVisible(false);
         ps.y = -50;
     }
+    makeBar(x, y,color) {
+        //draw the bar
+        let bar = this.add.graphics();
 
+        //color the bar
+        bar.fillStyle(color, 1);
+
+        //fill the bar with a rectangle
+        bar.fillRect(0, 0, 500, 25);
+        
+        //position the bar
+        bar.x = x;
+        bar.y = y;
+
+        //return the bar
+        return bar;
+    }
+
+
+
+    //=-====================================================
+    //=-====================================================
     update(time, delta) {
+
+        if(this.end){return;}
+
+        if(this.hitpoint >= 20){
+            this.end = true;
+            this.cam.pan(player.x, player.y, 2000, 'Sine.easeInOut');
+            this.cam.zoomTo(1, 12);
+            player.setVelocity(0,0);
+
+            this.time.delayedCall(3000, () => {
+                this.scene.start("menuScene");  
+            });
+            return;
+        }
+
+
+
         this.loop_timer += delta;
+        this.debugging_text.setText("Distance: " + String(this.total_timer) + " m");
         if(this.loop_timer >= 1000){
 
             this.total_timer += 1;
@@ -268,6 +322,7 @@ class Play extends Phaser.Scene {
         }
 
 
+        this.p_health_bar.scaleX = Math.max(20 - this.hitpoint, 0) / 20;
 
     }
 
